@@ -1,22 +1,31 @@
 'use client';
-import React, { useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
-import { FaBars, FaTimes } from 'react-icons/fa';
+import { FaBars, FaTimes, FaSun, FaMoon } from 'react-icons/fa';
+import { useTheme } from 'next-themes';
 
 /**
  * Navbar component provides a responsive, accessible navigation menu.
  * - Hamburger menu for mobile
  * - Horizontal links for desktop
  * - Uses Tailwind breakpoints and accessibility best practices
+ * - Includes theme toggle using next-themes
  */
 export const Navbar: React.FC = () => {
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = React.useState(false);
+  // eslint-disable-next-line
+  const { theme, setTheme, resolvedTheme } = useTheme();
+
+  // Prevent hydration mismatch by only rendering toggle after mount
+  const [mounted, setMounted] = React.useState(false);
+  React.useEffect(() => setMounted(true), []);
 
   const handleToggle = () => setMenuOpen((open) => !open);
   const handleClose = () => setMenuOpen(false);
-
-  // Close menu on navigation (mobile)
   const handleLinkClick = () => handleClose();
+  const handleThemeToggle = () => {
+    setTheme(resolvedTheme === 'dark' ? 'light' : 'dark');
+  };
 
   return (
     <nav
@@ -28,6 +37,26 @@ export const Navbar: React.FC = () => {
       </div>
       {/* Desktop Links */}
       <ul className="hidden md:flex space-x-6 text-base">
+        <li>
+          {mounted && (
+            <button
+              type="button"
+              onClick={handleThemeToggle}
+              aria-label={
+                resolvedTheme === 'dark'
+                  ? 'Switch to light mode'
+                  : 'Switch to dark mode'
+              }
+              className="mr-4 text-xl focus:outline-none focus:ring-2 focus:ring-primary-600 rounded transition-colors duration-200"
+            >
+              {resolvedTheme === 'dark' ? (
+                <FaSun className="text-yellow-400" />
+              ) : (
+                <FaMoon className="text-gray-700 dark:text-gray-200" />
+              )}
+            </button>
+          )}
+        </li>
         <li>
           <Link
             href="/"
@@ -80,6 +109,25 @@ export const Navbar: React.FC = () => {
         >
           <FaTimes size={28} />
         </button>
+        {/* Theme toggle in mobile menu */}
+        {mounted && (
+          <button
+            type="button"
+            onClick={handleThemeToggle}
+            aria-label={
+              resolvedTheme === 'dark'
+                ? 'Switch to light mode'
+                : 'Switch to dark mode'
+            }
+            className="text-2xl focus:outline-none focus:ring-2 focus:ring-primary-600 rounded transition-colors duration-200"
+          >
+            {resolvedTheme === 'dark' ? (
+              <FaSun className="text-yellow-400" />
+            ) : (
+              <FaMoon className="text-gray-700 dark:text-gray-200" />
+            )}
+          </button>
+        )}
         <li>
           <Link
             href="/"

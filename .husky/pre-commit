@@ -1,1 +1,10 @@
-npm run format && npm run lint
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+npm run format
+npm run lint:fix
+RESULT=$?
+if [ $RESULT -ne 0 ]; then
+  echo "Pre-commit failed: Formatting or linting errors found."
+  exit 1
+fi
