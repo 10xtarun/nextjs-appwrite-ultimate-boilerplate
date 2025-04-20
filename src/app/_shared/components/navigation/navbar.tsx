@@ -95,14 +95,24 @@ export const Navbar: React.FC = () => {
           </li>
         )}
         {!loading && !user && (
-          <li>
-            <Link
-              href="/login"
-              className="hover:text-primary-600 focus:outline-none focus:underline"
-            >
-              Login
-            </Link>
-          </li>
+          <>
+            <li>
+              <Link
+                href="/login"
+                className="hover:text-primary-600 focus:outline-none focus:underline"
+              >
+                Login
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/signup"
+                className="hover:text-primary-600 focus:outline-none focus:underline"
+              >
+                Signup
+              </Link>
+            </li>
+          </>
         )}
       </ul>
       {/* Hamburger Button (Mobile) */}
@@ -186,16 +196,28 @@ export const Navbar: React.FC = () => {
           </li>
         )}
         {!loading && !user && (
-          <li>
-            <Link
-              href="/login"
-              className="hover:text-primary-600 focus:outline-none focus:underline"
-              tabIndex={menuOpen ? 0 : -1}
-              onClick={handleLinkClick}
-            >
-              Login
-            </Link>
-          </li>
+          <>
+            <li>
+              <Link
+                href="/login"
+                className="hover:text-primary-600 focus:outline-none focus:underline"
+                tabIndex={menuOpen ? 0 : -1}
+                onClick={handleLinkClick}
+              >
+                Login
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/signup"
+                className="hover:text-primary-600 focus:outline-none focus:underline"
+                tabIndex={menuOpen ? 0 : -1}
+                onClick={handleLinkClick}
+              >
+                Signup
+              </Link>
+            </li>
+          </>
         )}
       </ul>
       {/* Overlay for closing menu by clicking outside */}

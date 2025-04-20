@@ -52,9 +52,19 @@ export const useSignupForm = (): UseSignupFormReturn => {
     setLoading(true);
     try {
       const { account } = getAppwrite();
+      // Try to delete any existing sessions before creating a new account
+      try {
+        await account.deleteSession('current');
+      } catch (sessionError) {
+        // Ignore error if no session exists
+        console.log(
+          'No existing session to delete or error deleting session',
+          sessionError,
+        );
+      }
       const userId = ID.unique();
       await account.create(userId, form.email, form.password, form.name);
-      await account.createEmailPasswordSession(form.email, form.password);
+      // Do NOT create a session after signup
       setSuccess(true);
       setForm({
         name: '',

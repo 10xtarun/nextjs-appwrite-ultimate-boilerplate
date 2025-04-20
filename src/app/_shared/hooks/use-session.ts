@@ -46,8 +46,23 @@ export function useSession(): UseSessionReturn {
     setLoading(true);
     try {
       const { account } = getAppwrite();
-      await account.deleteSession('current');
+
+      // Get all sessions and delete them to ensure complete logout
+      try {
+        const sessions = await account.listSessions();
+        const deletePromises = sessions.sessions.map((session) =>
+          account.deleteSession(session.$id),
+        );
+        await Promise.all(deletePromises);
+      } catch (error) {
+        // Fallback to deleting current session if listing fails
+        console.log('error: ', error);
+        await account.deleteSession('current');
+      }
+
       setUser(null);
+    } catch (error) {
+      console.error('Logout error:', error);
     } finally {
       setLoading(false);
     }

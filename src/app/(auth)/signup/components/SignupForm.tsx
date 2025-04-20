@@ -22,7 +22,7 @@ export const SignupForm: React.FC = () => {
   // Redirect after successful signup
   React.useEffect(() => {
     if (success) {
-      router.replace('/profile');
+      router.replace('/login');
     }
   }, [success, router]);
 

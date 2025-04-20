@@ -7,3 +7,8 @@ export type SignupFormData = {
   confirmPassword: string;
   role: UserRole;
 };
+
+export type LoginFormData = {
+  email: string;
+  password: string;
+};

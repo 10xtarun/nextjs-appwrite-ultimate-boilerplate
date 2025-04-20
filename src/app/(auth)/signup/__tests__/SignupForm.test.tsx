@@ -73,7 +73,7 @@ describe('SignupForm', () => {
     expect(screen.getByText(/invalid input/i)).toBeInTheDocument();
   });
 
-  it('redirects to /profile after signup success', async () => {
+  it('redirects to /login after signup success', async () => {
     (mockUseSignupForm as jest.Mock).mockImplementation(() => ({
       form: defaultForm,
       error: null,
@@ -89,7 +89,7 @@ describe('SignupForm', () => {
     }));
     render(<SignupForm />);
     await waitFor(() => {
-      expect(mockPush).toHaveBeenCalledWith('/profile');
+      expect(mockPush).toHaveBeenCalledWith('/login');
     });
   });
 
