@@ -1,74 +1,30 @@
+// Moved from _features/signup/components/SignupForm.tsx
 'use client';
 
-import React, { useState } from 'react';
-import type { SignupFormData, UserRole } from '../../../_shared/types/auth';
-import { signupSchema } from '../../../_shared/validation/auth-schema';
-import { getAppwrite } from '../../../_libs/appwrite-service';
-import { ID } from 'appwrite';
-
-const roles: readonly UserRole[] = ['user', 'admin'] as const;
+import React from 'react';
+import { useSignupForm } from '../hooks/use-signup-form';
+import { useRouter } from 'next/navigation';
+import { useSession } from '../../../_shared/hooks/use-session';
 
 export const SignupForm: React.FC = () => {
-  const [form, setForm] = useState<SignupFormData>({
-    name: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-    role: 'user',
-  });
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const { form, error, success, loading, handleChange, handleSubmit, roles } =
+    useSignupForm();
+  const router = useRouter();
+  const { user, loading: sessionLoading } = useSession();
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
-  ) => {
-    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-  };
+  // Redirect if already logged in
+  React.useEffect(() => {
+    if (!sessionLoading && user) {
+      router.replace('/profile');
+    }
+  }, [user, sessionLoading, router]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    debugger;
-    e.preventDefault();
-    setError(null);
-    setSuccess(false);
-    const parsed = signupSchema.safeParse(form);
-    if (!parsed.success) {
-      setError(parsed.error.errors[0]?.message || 'Invalid input');
-      return;
+  // Redirect after successful signup
+  React.useEffect(() => {
+    if (success) {
+      router.replace('/profile');
     }
-    setLoading(true);
-    try {
-      const { account } = getAppwrite();
-      const userId = ID.unique();
-      console.log('Generated Appwrite userId:', userId);
-      const createdUser = await account.create(
-        userId,
-        form.email,
-        form.password,
-        form.name,
-      );
-      await account.createEmailPasswordSession(
-        createdUser.email,
-        form.password,
-      );
-      setSuccess(true);
-      setForm({
-        name: '',
-        email: '',
-        password: '',
-        confirmPassword: '',
-        role: 'user',
-      });
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        setError(err.message || 'Signup failed');
-      } else {
-        setError('Signup failed');
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
+  }, [success, router]);
 
   return (
     <form
@@ -170,13 +126,19 @@ export const SignupForm: React.FC = () => {
           </select>
         </div>
       </div>
-      {error && <div className="text-red-500 text-base mt-2">{error}</div>}
+      {error && (
+        <div className="text-red-600 dark:text-red-400 text-center mt-2">
+          {error}
+        </div>
+      )}
       {success && (
-        <div className="text-green-600 text-base mt-2">Signup successful!</div>
+        <div className="text-green-600 dark:text-green-400 text-center mt-2">
+          Signup successful!
+        </div>
       )}
       <button
         type="submit"
-        className="w-full py-3 mt-2 text-lg font-semibold rounded-lg bg-primary-600 hover:bg-primary-700 text-white dark:bg-primary-500 dark:hover:bg-primary-600 transition-colors disabled:opacity-60"
+        className="w-full mt-6 py-3 px-6 rounded-lg bg-primary-600 text-white text-lg font-semibold hover:bg-primary-700 transition-colors disabled:opacity-60"
         disabled={loading}
       >
         {loading ? 'Signing up...' : 'Sign Up'}

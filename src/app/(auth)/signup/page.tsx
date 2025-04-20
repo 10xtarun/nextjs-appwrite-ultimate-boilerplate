@@ -1,4 +1,4 @@
-import { SignupForm } from '../../_features/signup/components/SignupForm';
+import { SignupForm } from './components/SignupForm';
 
 /**
  * Signup page route: /signup

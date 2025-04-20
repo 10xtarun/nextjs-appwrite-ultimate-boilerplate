@@ -3,6 +3,8 @@ import React from 'react';
 import Link from 'next/link';
 import { FaBars, FaTimes, FaSun, FaMoon } from 'react-icons/fa';
 import { useTheme } from 'next-themes';
+import { useSession } from '../../hooks/use-session';
+import { useRouter } from 'next/navigation';
 
 /**
  * Navbar component provides a responsive, accessible navigation menu.
@@ -25,6 +27,15 @@ export const Navbar: React.FC = () => {
   const handleLinkClick = () => handleClose();
   const handleThemeToggle = () => {
     setTheme(resolvedTheme === 'dark' ? 'light' : 'dark');
+  };
+
+  // Session logic
+  const { user, loading, logout } = useSession();
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    await logout();
+    router.push('/login');
   };
 
   return (
@@ -73,14 +84,26 @@ export const Navbar: React.FC = () => {
             About
           </Link>
         </li>
-        <li>
-          <Link
-            href="/login"
-            className="hover:text-primary-600 focus:outline-none focus:underline"
-          >
-            Login
-          </Link>
-        </li>
+        {!loading && user && (
+          <li>
+            <button
+              onClick={handleLogout}
+              className="hover:text-primary-600 focus:outline-none focus:underline"
+            >
+              Logout
+            </button>
+          </li>
+        )}
+        {!loading && !user && (
+          <li>
+            <Link
+              href="/login"
+              className="hover:text-primary-600 focus:outline-none focus:underline"
+            >
+              Login
+            </Link>
+          </li>
+        )}
       </ul>
       {/* Hamburger Button (Mobile) */}
       <button
@@ -148,16 +171,32 @@ export const Navbar: React.FC = () => {
             About
           </Link>
         </li>
-        <li>
-          <Link
-            href="/login"
-            className="hover:text-primary-600 focus:outline-none focus:underline"
-            tabIndex={menuOpen ? 0 : -1}
-            onClick={handleLinkClick}
-          >
-            Login
-          </Link>
-        </li>
+        {!loading && user && (
+          <li>
+            <button
+              onClick={async () => {
+                await handleLogout();
+                handleClose();
+              }}
+              className="hover:text-primary-600 focus:outline-none focus:underline"
+              tabIndex={menuOpen ? 0 : -1}
+            >
+              Logout
+            </button>
+          </li>
+        )}
+        {!loading && !user && (
+          <li>
+            <Link
+              href="/login"
+              className="hover:text-primary-600 focus:outline-none focus:underline"
+              tabIndex={menuOpen ? 0 : -1}
+              onClick={handleLinkClick}
+            >
+              Login
+            </Link>
+          </li>
+        )}
       </ul>
       {/* Overlay for closing menu by clicking outside */}
       {menuOpen && (
