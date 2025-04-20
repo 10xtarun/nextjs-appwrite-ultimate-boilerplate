@@ -32,13 +32,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
 
   // Show loading state while checking authentication
   if (loading) {
-    return (
-      <div className="flex justify-center items-center min-h-[60vh]">
-        <div className="animate-pulse text-lg text-gray-600 dark:text-gray-400">
-          Checking authentication...
-        </div>
-      </div>
-    );
+    return null;
   }
 
   // If not loading and user exists, render children

@@ -12,6 +12,7 @@ import { ID } from 'appwrite';
 export type UseSignupFormReturn = {
   form: SignupFormData;
   error: string | null;
+  validationError: string | null;
   success: boolean;
   loading: boolean;
   handleChange: (
@@ -31,6 +32,7 @@ export const useSignupForm = (): UseSignupFormReturn => {
     role: 'user',
   });
   const [error, setError] = useState<string | null>(null);
+  const [validationError, setValidationError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -44,9 +46,10 @@ export const useSignupForm = (): UseSignupFormReturn => {
     e.preventDefault();
     setError(null);
     setSuccess(false);
+    setValidationError(null);
     const parsed = signupSchema.safeParse(form);
     if (!parsed.success) {
-      setError(parsed.error.errors[0]?.message || 'Invalid input');
+      setValidationError(parsed.error.errors[0]?.message || 'Invalid input');
       return;
     }
     setLoading(true);
@@ -87,6 +90,7 @@ export const useSignupForm = (): UseSignupFormReturn => {
   return {
     form,
     error,
+    validationError,
     success,
     loading,
     handleChange,

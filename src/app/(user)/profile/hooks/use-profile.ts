@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useSession } from '../../../_shared/hooks/use-session';
+import type { UserSession } from '../../../_shared/types/session';
 
 /**
  * useProfile hook return type
  */
 export type UseProfileReturn = {
+  profile: UserSession;
   loading: boolean;
   error: string | null;
 };
@@ -16,43 +18,25 @@ export type UseProfileReturn = {
  */
 export const useProfile = (): UseProfileReturn => {
   const { user, loading: sessionLoading } = useSession();
-  const [loading, setLoading] = useState<boolean>(true);
+  const [profile, setProfile] = useState<UserSession>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchProfileData = async () => {
-      // If session is still loading, wait for it
-      if (sessionLoading) {
-        return;
-      }
-
-      // If no user is found, set error
-      if (!user) {
-        setError('User not found');
-        setLoading(false);
-        return;
-      }
-
-      try {
-        // Here you could fetch additional profile data if needed
-        // For now, we're just using the user data from the session
-
-        setLoading(false);
-      } catch (err) {
-        if (err instanceof Error) {
-          setError(err.message);
-        } else {
-          setError('Failed to load profile data');
-        }
-        setLoading(false);
-      }
-    };
-
-    fetchProfileData();
+    if (sessionLoading) {
+      return;
+    }
+    if (!user) {
+      setProfile(null);
+      setError('User not found');
+      return;
+    }
+    setProfile(user);
+    setError(null);
   }, [user, sessionLoading]);
 
   return {
-    loading,
+    profile,
+    loading: sessionLoading,
     error,
   };
 };

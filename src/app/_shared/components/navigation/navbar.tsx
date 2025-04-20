@@ -84,17 +84,7 @@ export const Navbar: React.FC = () => {
             About
           </Link>
         </li>
-        {!loading && user && (
-          <li>
-            <button
-              onClick={handleLogout}
-              className="hover:text-primary-600 focus:outline-none focus:underline"
-            >
-              Logout
-            </button>
-          </li>
-        )}
-        {!loading && !user && (
+        {!user && !loading && (
           <>
             <li>
               <Link
@@ -113,6 +103,16 @@ export const Navbar: React.FC = () => {
               </Link>
             </li>
           </>
+        )}
+        {user && !loading && (
+          <li>
+            <button
+              onClick={handleLogout}
+              className="hover:text-primary-600 focus:outline-none focus:underline"
+            >
+              Logout
+            </button>
+          </li>
         )}
       </ul>
       {/* Hamburger Button (Mobile) */}
@@ -181,21 +181,7 @@ export const Navbar: React.FC = () => {
             About
           </Link>
         </li>
-        {!loading && user && (
-          <li>
-            <button
-              onClick={async () => {
-                await handleLogout();
-                handleClose();
-              }}
-              className="hover:text-primary-600 focus:outline-none focus:underline"
-              tabIndex={menuOpen ? 0 : -1}
-            >
-              Logout
-            </button>
-          </li>
-        )}
-        {!loading && !user && (
+        {!user && !loading && (
           <>
             <li>
               <Link
@@ -218,6 +204,20 @@ export const Navbar: React.FC = () => {
               </Link>
             </li>
           </>
+        )}
+        {user && !loading && (
+          <li>
+            <button
+              onClick={async () => {
+                await handleLogout();
+                handleClose();
+              }}
+              className="hover:text-primary-600 focus:outline-none focus:underline"
+              tabIndex={menuOpen ? 0 : -1}
+            >
+              Logout
+            </button>
+          </li>
         )}
       </ul>
       {/* Overlay for closing menu by clicking outside */}

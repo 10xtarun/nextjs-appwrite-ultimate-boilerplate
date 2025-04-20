@@ -7,8 +7,16 @@ import { useRouter } from 'next/navigation';
 import { useSession } from '../../../_shared/hooks/use-session';
 
 export const SignupForm: React.FC = () => {
-  const { form, error, success, loading, handleChange, handleSubmit, roles } =
-    useSignupForm();
+  const {
+    form,
+    error,
+    validationError,
+    success,
+    loading,
+    handleChange,
+    handleSubmit,
+    roles,
+  } = useSignupForm();
   const router = useRouter();
   const { user, loading: sessionLoading } = useSession();
 
@@ -127,12 +135,26 @@ export const SignupForm: React.FC = () => {
         </div>
       </div>
       {error && (
-        <div className="text-red-600 dark:text-red-400 text-center mt-2">
+        <div
+          className="text-red-600 dark:text-red-400 text-center mt-2"
+          role="alert"
+        >
           {error}
         </div>
       )}
+      {validationError && (
+        <div
+          className="text-red-600 dark:text-red-400 text-center mt-2"
+          role="alert"
+        >
+          {validationError}
+        </div>
+      )}
       {success && (
-        <div className="text-green-600 dark:text-green-400 text-center mt-2">
+        <div
+          className="text-green-600 dark:text-green-400 text-center mt-2"
+          role="status"
+        >
           Signup successful!
         </div>
       )}

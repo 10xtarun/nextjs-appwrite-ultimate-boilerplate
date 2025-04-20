@@ -16,6 +16,14 @@ const customJestConfig = {
     '^.+\\.(jpg|jpeg|png|gif|webp|avif|svg)$':
       '<rootDir>/__mocks__/fileMock.js',
   },
+  coverageThreshold: {
+    global: {
+      statements: 50,
+      branches: 50,
+      functions: 50,
+      lines: 50,
+    },
+  },
 };
 
 module.exports = createJestConfig(customJestConfig);
