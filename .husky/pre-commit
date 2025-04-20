@@ -3,6 +3,12 @@
 
 npm run format
 npm run lint:fix
+
+# Re-stage all changes after fixing
+git add .
+
+# Optionally, run lint again to ensure no errors remain
+npm run lint
 RESULT=$?
 if [ $RESULT -ne 0 ]; then
   echo "Pre-commit failed: Formatting or linting errors found."
